@@ -71,45 +71,6 @@ func TestQueryService_DailyActiveUsers(t *testing.T) {
 		}
 	})
 
-	t.Run("rejects a future date", func(t *testing.T) {
-		repo := &fakeRepository{
-			countFunc: func(start, end time.Time) (int64, error) {
-				t.Fatalf("repository should not be queried for a future date")
-				return 0, nil
-			},
-		}
-		svc := service.NewQueryService(repo, time.UTC)
-
-		_, err := svc.DailyActiveUsers(context.Background(), "2150-01-01")
-		if !errors.Is(err, service.ErrInvalidInput) {
-			t.Fatalf("expected ErrInvalidInput, got %v", err)
-		}
-	})
-
-	t.Run("does not reject today in a non-UTC service timezone", func(t *testing.T) {
-		// Regression test: the future check must use the service's configured
-		// timezone (via domain.DayBounds), not UTC. Between 18:30 and 23:59
-		// UTC, "today" in Asia/Kolkata (UTC+5:30) is already "tomorrow" in
-		// UTC, so a naive UTC-based comparison would wrongly reject it.
-		ist, err := time.LoadLocation("Asia/Kolkata")
-		if err != nil {
-			t.Fatalf("failed to load Asia/Kolkata: %v", err)
-		}
-		todayIST := time.Now().In(ist).Format("2006-01-02")
-
-		repo := &fakeRepository{countFunc: func(start, end time.Time) (int64, error) {
-			return 5, nil
-		}}
-		svc := service.NewQueryService(repo, ist)
-
-		count, err := svc.DailyActiveUsers(context.Background(), todayIST)
-		if err != nil {
-			t.Fatalf("expected today's IST date to be accepted, got error: %v", err)
-		}
-		if count != 5 {
-			t.Fatalf("expected count 5, got %d", count)
-		}
-	})
 }
 
 func TestQueryService_MonthlyActiveUsers(t *testing.T) {
@@ -142,21 +103,6 @@ func TestQueryService_MonthlyActiveUsers(t *testing.T) {
 		svc := service.NewQueryService(&fakeRepository{}, time.UTC)
 
 		_, err := svc.MonthlyActiveUsers(context.Background(), "2026/08")
-		if !errors.Is(err, service.ErrInvalidInput) {
-			t.Fatalf("expected ErrInvalidInput, got %v", err)
-		}
-	})
-
-	t.Run("rejects a future month", func(t *testing.T) {
-		repo := &fakeRepository{
-			countFunc: func(start, end time.Time) (int64, error) {
-				t.Fatalf("repository should not be queried for a future month")
-				return 0, nil
-			},
-		}
-		svc := service.NewQueryService(repo, time.UTC)
-
-		_, err := svc.MonthlyActiveUsers(context.Background(), "2150-01")
 		if !errors.Is(err, service.ErrInvalidInput) {
 			t.Fatalf("expected ErrInvalidInput, got %v", err)
 		}

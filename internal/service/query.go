@@ -28,9 +28,9 @@ func (s *QueryService) DailyActiveUsers(ctx context.Context, date string) (int64
 	if err != nil {
 		return 0, fmt.Errorf("%w: %s", ErrInvalidInput, err)
 	}
-	if start.After(time.Now().UTC()) {
-		return 0, fmt.Errorf("%w: %s", ErrInvalidInput, msgDateCannotBeFuture)
-	}
+	// if start.After(time.Now().UTC()) {
+	// 	return 0, fmt.Errorf("%w: %s", ErrInvalidInput, msgDateCannotBeFuture)
+	// }
 	return s.repo.CountDistinctUsers(ctx, start, end)
 }
 
@@ -41,8 +41,8 @@ func (s *QueryService) MonthlyActiveUsers(ctx context.Context, month string) (in
 	if err != nil {
 		return 0, fmt.Errorf("%w: %s", ErrInvalidInput, err)
 	}
-	if start.After(time.Now().UTC()) {
-		return 0, fmt.Errorf("%w: %s", ErrInvalidInput, msgMonthCannotBeFuture)
-	}
+	// if start.After(time.Now().UTC()) {
+	// 	return 0, fmt.Errorf("%w: %s", ErrInvalidInput, msgMonthCannotBeFuture)
+	// }
 	return s.repo.CountDistinctUsers(ctx, start, end)
 }

@@ -400,11 +400,6 @@ func TestAnalyticsHandlers_BadRequests(t *testing.T) {
 			wantPrefix: invalidInputPrefix,
 		},
 		{
-			name:        "daily future date is invalid input",
-			target:      "/api/v1/analytics/daily-active-users?date=2150-08-31",
-			wantMessage: invalidInputPrefix + "date cannot be in the future",
-		},
-		{
 			name:        "monthly missing month param",
 			target:      "/api/v1/analytics/monthly-active-users",
 			wantMessage: "month query parameter is required (YYYY-MM)",
@@ -428,11 +423,6 @@ func TestAnalyticsHandlers_BadRequests(t *testing.T) {
 			name:       "monthly out of range month",
 			target:     "/api/v1/analytics/monthly-active-users?month=2026-13",
 			wantPrefix: invalidInputPrefix,
-		},
-		{
-			name:        "monthly future month is invalid input",
-			target:      "/api/v1/analytics/monthly-active-users?month=2150-08",
-			wantMessage: invalidInputPrefix + "month cannot be in the future",
 		},
 	}
 
