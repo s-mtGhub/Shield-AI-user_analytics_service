@@ -21,4 +21,5 @@ const (
 	msgRecordLoginFailed      = "failed to record login event"
 	msgDailyActiveUsersFail   = "failed to compute daily active users"
 	msgMonthlyActiveUsersFail = "failed to compute monthly active users"
+	msgFutureTimestamp        = "timestamp cannot be in the future"
 )
