@@ -29,10 +29,10 @@ func NewIngestionService(repo repository.Repository) *IngestionService {
 func (s *IngestionService) RecordLogin(ctx context.Context, userID string, timestamp time.Time) error {
 	userID = strings.TrimSpace(userID)
 	if userID == "" {
-		return fmt.Errorf("%w: user_id is required", ErrInvalidInput)
+		return fmt.Errorf("%w: %s", ErrInvalidInput, msgUserIDRequired)
 	}
 	if timestamp.IsZero() {
-		return fmt.Errorf("%w: timestamp is required", ErrInvalidInput)
+		return fmt.Errorf("%w: %s", ErrInvalidInput, msgTimestampRequired)
 	}
 
 	event := domain.LoginEvent{

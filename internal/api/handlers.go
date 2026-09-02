@@ -68,15 +68,8 @@ func (h *Handler) RecordLogin(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) DailyActiveUsers(w http.ResponseWriter, r *http.Request) {
 	date := r.URL.Query().Get(queryParamDate)
-	ts := time.Now().UTC()
-
 	if date == "" {
 		writeError(w, http.StatusBadRequest, msgMissingDateParam)
-		return
-	}
-
-	if dateTime, err := time.Parse("2006-01-02", date); err == nil && dateTime.After(ts) {
-		writeError(w, http.StatusBadRequest, msgFutureTimestamp)
 		return
 	}
 
@@ -95,15 +88,8 @@ func (h *Handler) DailyActiveUsers(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) MonthlyActiveUsers(w http.ResponseWriter, r *http.Request) {
 	month := r.URL.Query().Get(queryParamMonth)
-	ts := time.Now().UTC()
-
 	if month == "" {
 		writeError(w, http.StatusBadRequest, msgMissingMonthParam)
-		return
-	}
-
-	if monthTime, err := time.Parse("2006-01", month); err == nil && monthTime.After(ts) {
-		writeError(w, http.StatusBadRequest, msgFutureTimestamp)
 		return
 	}
 
